@@ -1,10 +1,12 @@
 package com.example.pokemon.api
 
-import retrofit2.Call
+import com.example.pokemon.api.model.PokemonDataResponse
+import com.example.pokemon.api.model.PokemonListResponse
+import retrofit2.Response
 import retrofit2.http.GET
 
 interface ApiService {
 
-    @GET("pokemon/?limit=100")
-    fun pokemons() : Call<List<Any>>
+    @GET("pokemon/")
+    suspend fun getPokemons() : Response<PokemonListResponse>
 }

@@ -1,6 +1,4 @@
 package com.example.pokemon.api.model
 
-class PokemonRepository {
-
-
+class Pokemon {
 }
