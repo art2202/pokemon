@@ -3,4 +3,15 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
+
+
+    <color name="branco">#FFFFFF</color>
+    <color name="preto">#000000</color>
+    <color name="vermelho">#FF0000</color>
+    <color name="Transp">#00000000</color>
+    <color name="azul">#004F9E</color>
+    <color name="verde">#43A047</color>[
+    <color name="laranja">#FF7D25</color>
+    <color name="cinza">#5c636d</color>
+
 </resources>
