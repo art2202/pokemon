@@ -9,9 +9,9 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/main_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
         android:background="@color/azul"
-        app:layout_constraintBottom_toTopOf="@id/recycler_view_pokemons">
+        app:layout_constraintBottom_toTopOf="@+id/scrollview">
 
         <TextView
             android:id="@+id/titulo"
@@ -23,11 +23,28 @@
             android:textStyle="bold"/>
 
     </androidx.appcompat.widget.Toolbar>
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_pokemons"
-        android:layout_marginTop="50dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toBottomOf="@id/main_toolbar"/>
+
+
+        <LinearLayout
+            android:id="@+id/linear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/main_toolbar">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_pokemons"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
+
+            <ProgressBar
+                android:id="@+id/progress_circular"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"/>
+
+        </LinearLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,7 +12,7 @@ class RestApi {
          this.retrofit = Retrofit.Builder()
             .baseUrl("https://pokeapi.co/api/v2/")
             .addConverterFactory(GsonConverterFactory.create())
-             .addCallAdapterFactory(CoroutineCallAdapterFactory())
+            .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .build()
     }
 

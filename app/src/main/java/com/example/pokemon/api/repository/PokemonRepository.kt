@@ -7,12 +7,12 @@ import retrofit2.Retrofit
 
 class PokemonRepository(private val api: RestApi) {
 
-    suspend fun getListaPokemon() : List<PokemonDataResponse>?{
+    suspend fun getListaPokemon(offset : Int) : List<PokemonDataResponse>?{
         var pokemonsResponse: List<PokemonDataResponse>? = listOf()
 
         try{
 
-            val response = api.getApiService().getPokemons()
+            val response = api.getApiService().getPokemons("pokemon/?offset=${offset}&limit=100")
 
 
             if(response.isSuccessful){
