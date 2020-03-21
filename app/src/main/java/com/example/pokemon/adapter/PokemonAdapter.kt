@@ -9,9 +9,13 @@ import com.example.pokemon.R
 import com.example.pokemon.api.model.PokemonDataResponse
 import kotlinx.android.synthetic.main.item_pokemon.view.*
 
-class PokemonAdapter(private var listaPokemonDataResponse: List<PokemonDataResponse>?, private val context : Context) : RecyclerView.Adapter<PokemonAdapter.MyViewHolder>() {
+class PokemonAdapter(private var listaPokemonDataResponse: ArrayList<PokemonDataResponse>?, private val context : Context) : RecyclerView.Adapter<PokemonAdapter.MyViewHolder>() {
 
     inner class MyViewHolder(view: View): RecyclerView.ViewHolder(view)
+
+    fun addLista(listaPokemon: List<PokemonDataResponse>?){
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         return MyViewHolder(LayoutInflater.from(context).inflate(R.layout.item_pokemon, parent, false))

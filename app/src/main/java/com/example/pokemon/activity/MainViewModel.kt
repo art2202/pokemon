@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 class MainViewModel(private val pokemonRepository: PokemonRepository) : ViewModel() {
 
     private val response = MutableLiveData<Response>()
+    private val responsePaginacao = MutableLiveData<Response>()
 
     private var listaPokemons = arrayListOf<PokemonDataResponse>()
 
@@ -20,6 +21,7 @@ class MainViewModel(private val pokemonRepository: PokemonRepository) : ViewMode
             try {
                 val lista = pokemonRepository.getListaPokemon(0)
                 listaPokemons.addAll(lista ?: listOf())
+                println("primeira vez " + listaPokemons.size)
                 response.postValue(Response.success(listaPokemons))
             }
             catch (t : Throwable){
@@ -35,8 +37,12 @@ class MainViewModel(private val pokemonRepository: PokemonRepository) : ViewMode
 
         viewModelScope.launch {
             try {
+//                println(listaPokemons.size)
                 val lista = pokemonRepository.getListaPokemon(offset)
-                listaPokemons.addAll(lista ?: listOf())
+                println("antes de add " + lista?.size)
+                listaPokemons.addAll(lista!!)
+                println("depois de add "+ listaPokemons.size)
+                responsePaginacao.postValue(Response.success(listaPokemons))
 
             }
             catch (t : Throwable){
@@ -48,11 +54,17 @@ class MainViewModel(private val pokemonRepository: PokemonRepository) : ViewMode
         return listaPokemons
     }
 
-
+    fun setListaPokemon(lista : ArrayList<PokemonDataResponse>){
+        listaPokemons = lista
+    }
 
 
     fun response() : MutableLiveData<Response> {
         return response
+    }
+
+    fun responsePaginacao() : MutableLiveData<Response>{
+        return responsePaginacao
     }
 
 }
