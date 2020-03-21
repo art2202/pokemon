@@ -2,9 +2,10 @@ package com.example.pokemon.activity
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import com.example.pokemon.R
@@ -16,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), EventoClick {
 
     private val viewModel : MainViewModel by viewModel()
     private var i = 1
@@ -26,7 +27,7 @@ class MainActivity : AppCompatActivity() {
     private var visibleItemCount = 0
     private var totalItemCount = 0
     private var previousTotal = 0
-    val layoutManager = LinearLayoutManager(this)
+    val layoutManager = GridLayoutManager(this, 3)
     private lateinit var adapter : PokemonAdapter
 
 
@@ -80,7 +81,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun inicializaRecyclerView(pokemons : ArrayList<PokemonDataResponse>){
 
-        adapter = PokemonAdapter(pokemons, this)
+        adapter = PokemonAdapter(pokemons, this, this)
         recycler_view_pokemons.layoutManager = layoutManager
         recycler_view_pokemons.setHasFixedSize(true)
         recycler_view_pokemons.adapter = adapter
@@ -114,6 +115,10 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         } )
+    }
+
+    override fun clickMostrarInfo(item: PokemonDataResponse) {
+        Toast.makeText(this, item.name, Toast.LENGTH_SHORT).show()
     }
 
 }
