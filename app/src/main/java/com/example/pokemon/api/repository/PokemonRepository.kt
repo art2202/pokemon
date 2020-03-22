@@ -11,7 +11,7 @@ class PokemonRepository(private val api: RestApi) {
 
         try{
             val response = api.getApiService().getPokemons("pokemon/?offset=${offset}&limit=100")
-
+//            response.body()!!.results[0].url
             if(!response.isSuccessful)
                 throw Exception("Erro ao fazer requisição")
 
@@ -30,10 +30,11 @@ class PokemonRepository(private val api: RestApi) {
         return  pokemonsResponse.body()?.results?.map {
             NamePokemonDataResponse(
                 it.name ?: "",
-                it.url ?: ""
+                pegaId(it.url) ?: ""
             )
         }
 
     }
+    fun pegaId(url : String?) : String? = url?.removePrefix("https://pokeapi.co/api/v2/pokemon/")?.removeSuffix("/")
 
 }

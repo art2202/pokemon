@@ -18,6 +18,7 @@ class PokemonAdapter(private var listaNamePokemonDataResponse: ArrayList<NamePok
                      private val eventoClick: EventoClick) : RecyclerView.Adapter<PokemonAdapter.MyViewHolder>() {
 
     private val picasso = Picasso.get()
+
     inner class MyViewHolder(view: View): RecyclerView.ViewHolder(view)
 
     fun addLista(listaNamePokemon: List<NamePokemonDataResponse>?){
@@ -33,7 +34,7 @@ class PokemonAdapter(private var listaNamePokemonDataResponse: ArrayList<NamePok
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val item = listaNamePokemonDataResponse!!.get(position)
 
-        picasso.load("https://pokeres.bastionbot.org/images/pokemon/${position+1}.png").into(holder.itemView.foto_pokemon)
+        picasso.load("https://pokeres.bastionbot.org/images/pokemon/${item.url}.png").into(holder.itemView.foto_pokemon)
         holder.itemView.text_nome_pokemon.text = item.name
         holder.itemView.id_pokemon.text = (position+1).toString()
         holder.itemView.adapter_layout.setOnClickListener {

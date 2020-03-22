@@ -29,20 +29,20 @@ class PokemonInfoRepository(private val restApi: RestApi) {
     fun mapResponse(response : Response<PokemonDataResponse>) : Pokemon{
 
         return Pokemon(
-            response.body()!!.abilitiesDataResponse,
-            response.body()!!.baseExperience,
-            response.body()!!.formsDataResponse,
-            response.body()!!.gameIndicesDataResponse,
+            response.body()!!.abilities,
+            response.body()!!.base_experience,
+            response.body()!!.forms,
+            response.body()!!.game_indices,
             response.body()!!.height,
-            response.body()!!.heldItemsDataResponse,
+            response.body()!!.held_items,
             response.body()!!.id,
-            response.body()!!.isDefault,
-            response.body()!!.movesDataResponse,
+            response.body()!!.is_default,
+            response.body()!!.moves,
             response.body()!!.name,
             response.body()!!.order,
-            response.body()!!.speciesDataResponse,
-            response.body()!!.statsDataResponse,
-            response.body()!!.typesDataResponse,
+            response.body()!!.species,
+            response.body()!!.stats,
+            response.body()!!.types,
             response.body()!!.weight
         )
 
