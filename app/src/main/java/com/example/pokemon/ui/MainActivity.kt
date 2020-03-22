@@ -1,8 +1,9 @@
-package com.example.pokemon.activity
+package com.example.pokemon.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
@@ -10,9 +11,10 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import com.example.pokemon.R
 import com.example.pokemon.adapter.PokemonAdapter
-import com.example.pokemon.api.model.PokemonDataResponse
+import com.example.pokemon.api.model.NamePokemonDataResponse
 import com.example.pokemon.common.Response
 import com.example.pokemon.common.Status
+import com.example.pokemon.ui.viewModel.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -34,7 +36,6 @@ class MainActivity : AppCompatActivity(), EventoClick {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         viewModel.response().observe(this, Observer { response ->  processResponse(response)})
         viewModel.responsePaginacao().observe(this, Observer { maisResponse -> processResponseScroll(maisResponse)})
         progress_circular.visibility = View.VISIBLE
@@ -51,7 +52,7 @@ class MainActivity : AppCompatActivity(), EventoClick {
     }
 
     private fun responseSuccessScroll(result: Any?){
-        result as ArrayList<PokemonDataResponse>
+        result as ArrayList<NamePokemonDataResponse>
         adapter.notifyDataSetChanged()
         progress_circular.visibility = View.GONE
 //        println(result.size)
@@ -67,7 +68,7 @@ class MainActivity : AppCompatActivity(), EventoClick {
 
     private fun responseSuccess(result: Any?){
 
-        result as ArrayList<PokemonDataResponse>
+        result as ArrayList<NamePokemonDataResponse>
         viewModel.setListaPokemon(result)
         inicializaRecyclerView(result)
         progress_circular.visibility = View.GONE
@@ -76,12 +77,15 @@ class MainActivity : AppCompatActivity(), EventoClick {
     }
 
     private fun responseFailure(erro : Throwable?){
-        println(erro?.message)
+        AlertDialog.Builder(this).setMessage("Não foi possivel baixar os pokemons, tente novamente mais tarde")
+            .setPositiveButton("ok",  { _, _ ->}).create().show()
+        progress_circular.visibility = View.GONE
+
     }
 
-    private fun inicializaRecyclerView(pokemons : ArrayList<PokemonDataResponse>){
+    private fun inicializaRecyclerView(namePokemons : ArrayList<NamePokemonDataResponse>){
 
-        adapter = PokemonAdapter(pokemons, this, this)
+        adapter = PokemonAdapter(namePokemons, this, this)
         recycler_view_pokemons.layoutManager = layoutManager
         recycler_view_pokemons.setHasFixedSize(true)
         recycler_view_pokemons.adapter = adapter
@@ -117,8 +121,11 @@ class MainActivity : AppCompatActivity(), EventoClick {
         } )
     }
 
-    override fun clickMostrarInfo(item: PokemonDataResponse) {
-        Toast.makeText(this, item.name, Toast.LENGTH_SHORT).show()
+    override fun clickMostrarInfo(item: NamePokemonDataResponse) {
+
+        intent = Intent(applicationContext, InfoPokemonActivity::class.java)
+        intent.putExtra("nome", item.name)
+        startActivity(intent)
     }
 
 }

@@ -10,4 +10,6 @@ interface ApiService {
 
     @GET
     suspend fun getPokemons(@Url url : String) : Response<PokemonListResponse>
+    @GET
+    suspend fun getInfoPokemon(@Url url :String) : Response<PokemonDataResponse>
 }

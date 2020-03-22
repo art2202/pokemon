@@ -1,32 +1,39 @@
 package com.example.pokemon.api.repository
 
-import com.example.pokemon.api.ApiService
 import com.example.pokemon.api.RestApi
-import com.example.pokemon.api.model.PokemonDataResponse
-import retrofit2.Retrofit
+import com.example.pokemon.api.model.NamePokemonDataResponse
+import com.example.pokemon.api.model.PokemonListResponse
+import retrofit2.Response
 
 class PokemonRepository(private val api: RestApi) {
 
-    suspend fun getListaPokemon(offset : Int) : List<PokemonDataResponse>?{
-        var pokemonsResponse: List<PokemonDataResponse>? = listOf()
+    suspend fun getListaPokemon(offset : Int) : Response<PokemonListResponse> {
 
         try{
-
             val response = api.getApiService().getPokemons("pokemon/?offset=${offset}&limit=100")
 
+            if(!response.isSuccessful)
+                throw Exception("Erro ao fazer requisição")
 
-            if(response.isSuccessful){
+            else
+                return response
 
-                val listagem = response.body()
-
-                pokemonsResponse = listagem?.results?.map { PokemonDataResponse(it.name ?: "", it.url ?: "") }
-            }
         }
         catch (e : Exception){
+            println(e.message)
             throw Exception(e.message)
         }
 
-        return pokemonsResponse ?: listOf()
+    }
+
+    fun mapResponse(pokemonsResponse : Response<PokemonListResponse>) : List<NamePokemonDataResponse>?{
+        return  pokemonsResponse.body()?.results?.map {
+            NamePokemonDataResponse(
+                it.name ?: "",
+                it.url ?: ""
+            )
+        }
+
     }
 
 }

@@ -1,11 +1,11 @@
-package com.example.pokemon.activity
+package com.example.pokemon.ui.viewModel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.pokemon.api.repository.PokemonRepository
 import com.example.pokemon.common.Response
 import androidx.lifecycle.viewModelScope
-import com.example.pokemon.api.model.PokemonDataResponse
+import com.example.pokemon.api.model.NamePokemonDataResponse
 import kotlinx.coroutines.launch
 
 
@@ -14,14 +14,16 @@ class MainViewModel(private val pokemonRepository: PokemonRepository) : ViewMode
     private val response = MutableLiveData<Response>()
     private val responsePaginacao = MutableLiveData<Response>()
 
-    private var listaPokemons = arrayListOf<PokemonDataResponse>()
+    private var listaPokemons = arrayListOf<NamePokemonDataResponse>()
 
     fun getPokemon(){
         viewModelScope.launch {
             try {
-                val lista = pokemonRepository.getListaPokemon(0)
-                listaPokemons.addAll(lista ?: listOf())
+                val requisicao = pokemonRepository.getListaPokemon(0)
+
+                listaPokemons.addAll(pokemonRepository.mapResponse(requisicao) ?: listOf())
                 println("primeira vez " + listaPokemons.size)
+
                 response.postValue(Response.success(listaPokemons))
             }
             catch (t : Throwable){
@@ -32,15 +34,15 @@ class MainViewModel(private val pokemonRepository: PokemonRepository) : ViewMode
         }
     }
 
-    fun getPokemon(valor : Int) : List<PokemonDataResponse>{
+    fun getPokemon(valor : Int) {
         var offset = valor*100
 
         viewModelScope.launch {
             try {
-//                println(listaPokemons.size)
-                val lista = pokemonRepository.getListaPokemon(offset)
-                println("antes de add " + lista?.size)
-                listaPokemons.addAll(lista!!)
+                println(listaPokemons.size)
+                val requisicao = pokemonRepository.getListaPokemon(offset)
+//                println("antes de add " + lista?.size)
+                listaPokemons.addAll(pokemonRepository.mapResponse(requisicao) ?: listOf())
                 println("depois de add "+ listaPokemons.size)
                 responsePaginacao.postValue(Response.success(listaPokemons))
 
@@ -51,12 +53,12 @@ class MainViewModel(private val pokemonRepository: PokemonRepository) : ViewMode
 
             }
         }
-        return listaPokemons
     }
 
-    fun setListaPokemon(lista : ArrayList<PokemonDataResponse>){
+    fun setListaPokemon(lista : ArrayList<NamePokemonDataResponse>){
         listaPokemons = lista
     }
+
 
 
     fun response() : MutableLiveData<Response> {
