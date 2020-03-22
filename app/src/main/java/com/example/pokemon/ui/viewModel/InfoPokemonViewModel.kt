@@ -11,6 +11,8 @@ import kotlinx.coroutines.launch
 class InfoPokemonViewModel(private val repository: PokemonInfoRepository) : ViewModel() {
 
     private val responseInfo = MutableLiveData<Response>()
+    private val responseHabilidades = MutableLiveData<Response>()
+    private val responsePokemonsTypes = MutableLiveData<Response>()
 
 
     fun getInfoPokemon(nomePokemon : String){
@@ -21,8 +23,34 @@ class InfoPokemonViewModel(private val repository: PokemonInfoRepository) : View
             }
 
             catch (t : Throwable){
-                println(t.message + "  viewmodel  ")
+                println(t.message + "  getInfoPokemon viewmodel  ")
                 responseInfo.postValue(Response.error(t))
+            }
+        }
+    }
+
+    fun getHabilidades(habilidade : String){
+        viewModelScope.launch {
+            try {
+                val requisicao = repository.getHabilidadesPokemon(habilidade)
+                responseHabilidades.postValue(Response.success(repository.mapResponseHabilidade(requisicao)))
+            }
+            catch (t : Throwable){
+                println(t.message + "  getHabilidades viewmodel  ")
+                responseHabilidades.postValue(Response.error(t))
+            }
+        }
+    }
+
+    fun getPokemonByType(tipo : String){
+        viewModelScope.launch {
+            try {
+                val requisicao = repository.getPokemonByType(tipo)
+                responsePokemonsTypes.postValue(Response.success(repository.mapResponseTipo(requisicao)))
+            }
+            catch (t : Throwable){
+                println(t.message + "  getHabilidades viewmodel  ")
+                responsePokemonsTypes.postValue(Response.error(t))
             }
         }
     }
@@ -30,4 +58,15 @@ class InfoPokemonViewModel(private val repository: PokemonInfoRepository) : View
     fun responseInfo() : MutableLiveData<Response>{
         return responseInfo
     }
+
+    fun responseHabilidades() : MutableLiveData<Response>{
+        return responseHabilidades
+    }
+
+    fun responsePokemonsTypes() : MutableLiveData<Response>{
+        return responsePokemonsTypes
+    }
+
+
+
 }

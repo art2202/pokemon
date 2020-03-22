@@ -1,7 +1,11 @@
 package com.example.pokemon.api.repository
 
 import com.example.pokemon.api.RestApi
+import com.example.pokemon.api.model.AbilityDescriptionDataResponse
+import com.example.pokemon.api.model.NamePokemonDataResponse
 import com.example.pokemon.api.model.PokemonDataResponse
+import com.example.pokemon.api.model.TypeListDataResponse
+import com.example.pokemon.domain.Habilidade
 import com.example.pokemon.domain.Pokemon
 import retrofit2.Response
 
@@ -24,6 +28,49 @@ class PokemonInfoRepository(private val restApi: RestApi) {
             println(e.message + "info repository")
             throw Exception(e.message)
         }
+    }
+
+    suspend fun getHabilidadesPokemon(habilidade : String): Response<AbilityDescriptionDataResponse> {
+
+        try {
+            val requisicao = restApi.getApiService().getHabilidadesPokemon("ability/" + habilidade)
+
+            if (!requisicao.isSuccessful)
+                throw Exception("Erro ao fazer requisição das habilidades do pokemon")
+            else
+                return requisicao
+        }
+
+        catch (e : Exception) {
+            println(e.message + "info repository (habilidade)")
+            throw Exception(e.message)
+        }
+
+    }
+
+    suspend fun getPokemonByType(tipo : String) : Response<TypeListDataResponse>{
+        try {
+            val requisicao = restApi.getApiService().getPokemonByType("type/" + tipo)
+
+            if(!requisicao.isSuccessful)
+                throw Exception("Erro ao fazer requisição dos pokemons pelo tipo")
+            else
+                return requisicao
+        }
+        catch (e : Exception) {
+            println(e.message + "info repository (habilidade)")
+            throw Exception(e.message)
+        }
+    }
+
+    fun mapResponseTipo(response: Response<TypeListDataResponse>) : List<NamePokemonDataResponse>?{
+        return response.body()!!.pokemon?.map {
+            NamePokemonDataResponse(it.pokemon.name, it.pokemon.url?.removePrefix("https://pokeapi.co/api/v2/pokemon/")?.removeSuffix("/"))
+        }
+    }
+
+    fun mapResponseHabilidade(response: Response<AbilityDescriptionDataResponse>) : Habilidade{
+        return Habilidade(response.body()!!.effect_entries)
     }
 
     fun mapResponse(response : Response<PokemonDataResponse>) : Pokemon{

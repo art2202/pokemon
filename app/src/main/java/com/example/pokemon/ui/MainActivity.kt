@@ -14,12 +14,14 @@ import com.example.pokemon.adapter.PokemonAdapter
 import com.example.pokemon.api.model.NamePokemonDataResponse
 import com.example.pokemon.common.Response
 import com.example.pokemon.common.Status
+import com.example.pokemon.ui.clicks.EventoClick
 import com.example.pokemon.ui.viewModel.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class MainActivity : AppCompatActivity(), EventoClick {
+class MainActivity : AppCompatActivity(),
+    EventoClick {
 
     private val viewModel : MainViewModel by viewModel()
     private var i = 1

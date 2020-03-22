@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pokemon.R
-import com.example.pokemon.ui.EventoClick
+import com.example.pokemon.ui.clicks.EventoClick
 import com.example.pokemon.api.model.NamePokemonDataResponse
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_pokemon.view.*
@@ -15,7 +15,8 @@ import kotlinx.android.synthetic.main.item_pokemon.view.*
 
 class PokemonAdapter(private var listaNamePokemonDataResponse: ArrayList<NamePokemonDataResponse>?,
                      private val context : Context,
-                     private val eventoClick: EventoClick) : RecyclerView.Adapter<PokemonAdapter.MyViewHolder>() {
+                     private val eventoClick: EventoClick
+) : RecyclerView.Adapter<PokemonAdapter.MyViewHolder>() {
 
     private val picasso = Picasso.get()
 
@@ -36,7 +37,7 @@ class PokemonAdapter(private var listaNamePokemonDataResponse: ArrayList<NamePok
 
         picasso.load("https://pokeres.bastionbot.org/images/pokemon/${item.url}.png").into(holder.itemView.foto_pokemon)
         holder.itemView.text_nome_pokemon.text = item.name
-        holder.itemView.id_pokemon.text = (position+1).toString()
+        holder.itemView.id_pokemon.text = item.url
         holder.itemView.adapter_layout.setOnClickListener {
             eventoClick.clickMostrarInfo(item)
         }
