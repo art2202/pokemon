@@ -3,6 +3,7 @@ package com.example.pokemon.api.repository
 import com.example.pokemon.api.RestApi
 import com.example.pokemon.api.model.NamePokemonDataResponse
 import com.example.pokemon.api.model.PokemonListResponse
+import com.example.pokemon.api.model.PokemonNameIdDataResponse
 import retrofit2.Response
 
 class PokemonRepository(private val api: RestApi) {
@@ -24,6 +25,27 @@ class PokemonRepository(private val api: RestApi) {
             throw Exception(e.message)
         }
 
+    }
+    suspend fun getPokemonBusca(url : String) : Response<PokemonNameIdDataResponse>{
+        try {
+            val response = api.getApiService().getPokemonBusca("pokemon/" + url)
+
+            if(!response.isSuccessful)
+                throw Exception("Erro ao fazer requisição")
+
+            else
+                return response
+        }
+        catch (e : Exception){
+            println(e.message)
+            throw Exception(e.message)
+        }
+
+    }
+
+    fun filterResponse(pokemonsResponse : Response<PokemonNameIdDataResponse>) : List<NamePokemonDataResponse>? {
+        return arrayListOf<NamePokemonDataResponse>(
+            NamePokemonDataResponse(pokemonsResponse.body()!!.name, pokemonsResponse.body()!!.id.toString()))
     }
 
     fun mapResponse(pokemonsResponse : Response<PokemonListResponse>) : List<NamePokemonDataResponse>?{

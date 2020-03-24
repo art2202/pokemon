@@ -1,9 +1,6 @@
 package com.example.pokemon.api
 
-import com.example.pokemon.api.model.AbilityDescriptionDataResponse
-import com.example.pokemon.api.model.PokemonDataResponse
-import com.example.pokemon.api.model.PokemonListResponse
-import com.example.pokemon.api.model.TypeListDataResponse
+import com.example.pokemon.api.model.*
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Url
@@ -18,4 +15,8 @@ interface ApiService {
     suspend fun getHabilidadesPokemon(@Url url : String) : Response<AbilityDescriptionDataResponse>
     @GET
     suspend fun getPokemonByType(@Url url : String) : Response<TypeListDataResponse>
+    @GET
+    suspend fun getPokemonBusca(@Url url : String) : Response<PokemonNameIdDataResponse>
+    @GET
+    suspend fun getSpecie(@Url url : String)
 }

@@ -34,6 +34,21 @@ class MainViewModel(private val pokemonRepository: PokemonRepository) : ViewMode
         }
     }
 
+    fun getPokemonByBusca(nome : String){
+        viewModelScope.launch {
+            try {
+
+                val requisicao = pokemonRepository.getPokemonBusca(nome)
+                response.postValue(Response.success(pokemonRepository.filterResponse(requisicao)))
+            }
+            catch (t : Throwable){
+                println(t.message)
+                response.postValue(Response.error(t))
+
+            }
+        }
+    }
+
     fun getPokemon(valor : Int) {
         var offset = valor*100
 

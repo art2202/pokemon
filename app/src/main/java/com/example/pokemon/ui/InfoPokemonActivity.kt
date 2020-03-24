@@ -41,6 +41,7 @@ class InfoPokemonActivity : AppCompatActivity() ,
         viewModel.responseInfo().observe(this, Observer { response ->  processResponse(response)})
         viewModel.responseHabilidades().observe(this, Observer { responseHabilidade -> processResponseHabilidade(responseHabilidade) })
 
+        botao_voltar.setOnClickListener { onBackPressed() }
         viewModel.getInfoPokemon(intent.getStringExtra("nome") ?: throw Exception("Nome invalido"))
         constrain_info.visibility = View.INVISIBLE
         progress_info.visibility = View.VISIBLE

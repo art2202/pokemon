@@ -1,8 +1,11 @@
 package com.example.pokemon.ui
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -16,6 +19,8 @@ import com.example.pokemon.common.Response
 import com.example.pokemon.common.Status
 import com.example.pokemon.ui.clicks.EventoClick
 import com.example.pokemon.ui.viewModel.MainViewModel
+import com.example.pokemon.util.CustomAlertDialog
+import com.example.pokemon.util.CustomAlertDialogBuilder
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -33,6 +38,7 @@ class MainActivity : AppCompatActivity(),
     private var previousTotal = 0
     val layoutManager = GridLayoutManager(this, 3)
     private lateinit var adapter : PokemonAdapter
+    private var busca = true
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +48,7 @@ class MainActivity : AppCompatActivity(),
         viewModel.responsePaginacao().observe(this, Observer { maisResponse -> processResponseScroll(maisResponse)})
         progress_circular.visibility = View.VISIBLE
         viewModel.getPokemon()
+        botao_pesquisar.setOnClickListener { dialogoFiltrar(it) }
 
     }
 
@@ -74,7 +81,8 @@ class MainActivity : AppCompatActivity(),
         viewModel.setListaPokemon(result)
         inicializaRecyclerView(result)
         progress_circular.visibility = View.GONE
-        paginacao()
+        if (!busca)
+            paginacao()
 
     }
 
@@ -122,6 +130,41 @@ class MainActivity : AppCompatActivity(),
             }
         } )
     }
+
+    fun dialogoFiltrar(view: View?) {
+
+        @SuppressLint("InflateParams")
+        val rootView: View = layoutInflater.inflate(R.layout.layout_busca, null)
+        val editText = rootView.findViewById<EditText>(R.id.edittext)
+        editText.isFocusable = true
+
+        val builder = CustomAlertDialogBuilder(this)
+            .customBuilder(
+                rootView,
+                "Buscar",
+                "Cancelar"
+            )
+
+        val filtro  = {
+            val texto = editText.editableText.toString()
+            if (texto == "") {
+                recycler_view_pokemons.adapter = PokemonAdapter(arrayListOf(), this, this)
+                viewModel.getPokemon()
+            }
+            else{
+                viewModel.getPokemonByBusca(texto)
+                progress_circular.visibility = View.VISIBLE
+            }
+        }
+
+        val alertDialog = CustomAlertDialog(this, editText, builder.create(), filtro)
+        alertDialog.customButtonPositive(R.color.azul, 18)
+            .customButtonNegative(R.color.preto, 18)
+        alertDialog.show()
+
+
+    }
+
 
     override fun clickMostrarInfo(item: NamePokemonDataResponse) {
 
