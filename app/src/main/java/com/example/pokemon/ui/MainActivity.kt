@@ -81,8 +81,7 @@ class MainActivity : AppCompatActivity(),
         viewModel.setListaPokemon(result)
         inicializaRecyclerView(result)
         progress_circular.visibility = View.GONE
-        if (!busca)
-            paginacao()
+        paginacao()
 
     }
 
