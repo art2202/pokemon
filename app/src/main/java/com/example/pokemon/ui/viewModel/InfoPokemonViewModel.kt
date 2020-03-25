@@ -42,6 +42,18 @@ class InfoPokemonViewModel(private val repository: PokemonInfoRepository) : View
         }
     }
 
+    fun getEvolucao(idPokemon : Int){
+
+        viewModelScope.launch {
+            try {
+                repository.getEvolucao(idPokemon)
+            }
+            catch (t : Throwable){
+                println(t.message + "  getEvolucao viewmodel  ")
+            }
+        }
+    }
+
     fun getPokemonByType(tipo : String){
         viewModelScope.launch {
             try {

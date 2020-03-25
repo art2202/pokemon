@@ -169,8 +169,19 @@
                 android:text="speed"
                 android:paddingLeft="20dp"
                 android:textStyle="bold"
-                app:layout_constraintTop_toBottomOf="@id/special_defense"
+                app:layout_constraintTop_toBottomOf="@id/defense"
                 app:layout_constraintLeft_toLeftOf="parent"/>
+
+
+            <TextView
+                android:id="@+id/evolucao"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Evoluções:"
+                android:padding="10dp"
+                android:textSize="30dp"
+                app:layout_constraintTop_toBottomOf="@id/speed"
+                app:layout_constraintBottom_toTopOf="@id/text_habilidade"/>
 
 
             <TextView
@@ -181,7 +192,7 @@
                 android:textSize="30sp"
                 android:layout_marginTop="20dp"
                 app:layout_constraintBottom_toTopOf="@id/recycler_moves"
-                app:layout_constraintTop_toBottomOf="@id/speed"
+                app:layout_constraintTop_toBottomOf="@id/evolucao"
                 app:layout_constraintLeft_toLeftOf="parent"/>
 
             <androidx.recyclerview.widget.RecyclerView

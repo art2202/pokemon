@@ -63,7 +63,6 @@ class InfoPokemonActivity : AppCompatActivity() ,
         view.recycler_tipo_pokemons.layoutManager = GridLayoutManager(this, 2)
         view.recycler_tipo_pokemons.adapter = PokemonAdapter(result, this, this)
         view.recycler_tipo_pokemons.isNestedScrollingEnabled = true
-
         dialog.setView(view).setPositiveButton("sair", null).create().show()
 
     }
@@ -122,6 +121,8 @@ class InfoPokemonActivity : AppCompatActivity() ,
         recycler_moves.layoutManager = layoutManager
         recycler_moves.isNestedScrollingEnabled = false
         recycler_moves.adapter = MovesAdapter(this, pokemon.habilidades, this)
+
+        evolucao.setOnClickListener { viewModel.getEvolucao(pokemon.id ?: throw Exception("pokemon Id is null")) }
 
 
     }

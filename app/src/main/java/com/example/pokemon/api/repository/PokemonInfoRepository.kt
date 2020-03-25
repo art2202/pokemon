@@ -48,6 +48,14 @@ class PokemonInfoRepository(private val restApi: RestApi) {
 
     }
 
+    suspend fun getEvolucao(pokemonId : Int){
+
+        val requisicaoSpecie = restApi.getApiService().getSpecie("pokemon-species/" + pokemonId)
+        val url = requisicaoSpecie.body()?.evolution_chain?.url?.removePrefix("https://pokeapi.co/api/v2/")
+        val requisicaoChain = restApi.getApiService()
+            .getChainEvolution(url ?: throw Exception(requisicaoSpecie.errorBody().toString()))
+    }
+
     suspend fun getPokemonByType(tipo : String) : Response<TypeListDataResponse>{
         try {
             val requisicao = restApi.getApiService().getPokemonByType("type/" + tipo)
