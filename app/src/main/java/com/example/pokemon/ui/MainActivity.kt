@@ -25,6 +25,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
+@Suppress("UNCHECKED_CAST")
 class MainActivity : AppCompatActivity(),
     EventoClick {
 
@@ -48,16 +49,15 @@ class MainActivity : AppCompatActivity(),
         viewModel.responsePaginacao().observe(this, Observer { maisResponse -> processResponseScroll(maisResponse)})
         progress_circular.visibility = View.VISIBLE
         viewModel.getPokemon()
-        botao_pesquisar.setOnClickListener { dialogoFiltrar(it) }
-
+        botao_pesquisar.setOnClickListener { dialogoFiltrar() }
     }
 
     private fun processResponseScroll(response: Response){
         when (response.status) {
             Status.SUCCESS -> responseSuccessScroll(response.data)
-            Status.ERROR -> responseFailure(response.error)
+            Status.ERROR -> responseFailure()
+            else -> throw Exception("processResponseScroll error")
         }
-
     }
 
     private fun responseSuccessScroll(result: Any?){
@@ -71,7 +71,9 @@ class MainActivity : AppCompatActivity(),
     private fun processResponse(response: Response) {
         when (response.status) {
             Status.SUCCESS -> responseSuccess(response.data)
-            Status.ERROR -> responseFailure(response.error)
+            Status.ERROR -> responseFailure()
+            else -> throw Exception("processResponse error")
+
         }
     }
 
@@ -85,7 +87,7 @@ class MainActivity : AppCompatActivity(),
 
     }
 
-    private fun responseFailure(erro : Throwable?){
+    private fun responseFailure(){
         AlertDialog.Builder(this).setMessage("Não foi possivel baixar os pokemons, tente novamente mais tarde")
             .setPositiveButton("ok",  { _, _ ->}).create().show()
         progress_circular.visibility = View.GONE
@@ -130,7 +132,7 @@ class MainActivity : AppCompatActivity(),
         } )
     }
 
-    fun dialogoFiltrar(view: View?) {
+    fun dialogoFiltrar() {
 
         @SuppressLint("InflateParams")
         val rootView: View = layoutInflater.inflate(R.layout.layout_busca, null)

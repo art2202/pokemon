@@ -25,10 +25,10 @@ class MovesAdapter(private val context: Context,
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val item = habilidades?.get(position)
 
-        holder.itemView.nome_habilidade.text = item?.ability?.name
+        holder.itemView.nome_habilidade.text = item?.ability?.name!!.replace("-", " ")
 
         holder.itemView.nome_habilidade.setOnClickListener {
-            mostrarHabilidades.listarTipo(item!!)
+            mostrarHabilidades.listarTipo(item)
         }
     }
 

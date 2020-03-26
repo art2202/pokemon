@@ -22,9 +22,6 @@ class PokemonAdapter(private var listaNamePokemonDataResponse: ArrayList<NamePok
 
     inner class MyViewHolder(view: View): RecyclerView.ViewHolder(view)
 
-    fun addLista(listaNamePokemon: List<NamePokemonDataResponse>?){
-        notifyDataSetChanged()
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         return MyViewHolder(LayoutInflater.from(context).inflate(R.layout.item_pokemon, parent, false))

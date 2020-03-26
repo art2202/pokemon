@@ -1,5 +1,6 @@
 package com.example.pokemon.ui
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -27,6 +28,7 @@ import kotlinx.android.synthetic.main.activity_info_pokemon.*
 import kotlinx.android.synthetic.main.dialog_tipo.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+@Suppress("UNCHECKED_CAST")
 class InfoPokemonActivity : AppCompatActivity() ,
     MostrarHabilidades, ClickTipo, EventoClick {
 
@@ -65,9 +67,12 @@ class InfoPokemonActivity : AppCompatActivity() ,
         when (response.status) {
             Status.SUCCESS -> responseTipoSucess(response.data)
             Status.ERROR -> responseFailure(response.error)
+            else -> throw Exception("processResponseTipo error")
+
         }
     }
 
+    @SuppressLint("InflateParams")
     private fun responseTipoSucess(result: Any?){
         result as ArrayList<NamePokemonDataResponse>
 
@@ -86,6 +91,7 @@ class InfoPokemonActivity : AppCompatActivity() ,
         when (response.status) {
             Status.SUCCESS -> responseHabilidadeSucess(response.data)
             Status.ERROR -> responseFailure(response.error)
+            else -> throw Exception("processResponseHabilidade error")
         }
     }
 
@@ -102,6 +108,8 @@ class InfoPokemonActivity : AppCompatActivity() ,
         when (response.status) {
             Status.SUCCESS -> responseSuccess(response.data)
             Status.ERROR -> responseFailure(response.error)
+
+            else -> throw Exception("processResponse error")
         }
     }
 
@@ -115,6 +123,7 @@ class InfoPokemonActivity : AppCompatActivity() ,
 
     }
 
+    @SuppressLint("SetTextI18n")
     private fun montarTela(pokemon: Pokemon){
 
         Picasso.get().load("https://pokeres.bastionbot.org/images/pokemon/${pokemon.id}.png").into(foto_pokemon)
