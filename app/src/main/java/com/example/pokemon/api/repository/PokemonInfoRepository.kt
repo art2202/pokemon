@@ -1,10 +1,7 @@
 package com.example.pokemon.api.repository
 
 import com.example.pokemon.api.RestApi
-import com.example.pokemon.api.model.AbilityDescriptionDataResponse
-import com.example.pokemon.api.model.NamePokemonDataResponse
-import com.example.pokemon.api.model.PokemonDataResponse
-import com.example.pokemon.api.model.TypeListDataResponse
+import com.example.pokemon.api.model.*
 import com.example.pokemon.domain.Habilidade
 import com.example.pokemon.domain.Pokemon
 import retrofit2.Response
@@ -48,12 +45,47 @@ class PokemonInfoRepository(private val restApi: RestApi) {
 
     }
 
-    suspend fun getEvolucao(pokemonId : Int){
+    suspend fun getEvolucao(pokemonId : Int) : Response<ChainDataResponse>{
 
-        val requisicaoSpecie = restApi.getApiService().getSpecie("pokemon-species/" + pokemonId)
-        val url = requisicaoSpecie.body()?.evolution_chain?.url?.removePrefix("https://pokeapi.co/api/v2/")
-        val requisicaoChain = restApi.getApiService()
-            .getChainEvolution(url ?: throw Exception(requisicaoSpecie.errorBody().toString()))
+        try{
+
+            val requisicaoSpecie = restApi.getApiService().getSpecie("pokemon-species/" + pokemonId)
+            val url = requisicaoSpecie.body()?.evolution_chain?.url?.removePrefix("https://pokeapi.co/api/v2/")
+            val requisicaoChain = restApi.getApiService()
+                .getChainEvolution(url ?: throw Exception(requisicaoSpecie.errorBody().toString()))
+
+            if (!requisicaoSpecie.isSuccessful || !requisicaoChain.isSuccessful)
+                throw Exception("Erro ao fazer requisição do tipo do pokemon")
+            else
+                return requisicaoChain
+
+        }
+        catch (e : Exception){
+            println(e.message + "info repository (getEvolucao)")
+            throw Exception(e.message)
+        }
+
+    }
+
+    fun mapEvolucao(requisicaoChain : Response<ChainDataResponse>) : ArrayList<NamePokemonDataResponse>{
+        val pokemonList =  arrayListOf(NamePokemonDataResponse(requisicaoChain.body()?.chain?.species?.name,
+            requisicaoChain.body()?.chain?.species?.url!!.removePrefix("https://pokeapi.co/api/v2/pokemon-species/").removeSuffix("/")))
+
+        val evolve = requisicaoChain.body()?.chain?.evolves_to
+        if ( evolve!!.isNotEmpty()){
+            evolve.map {
+                pokemonList.add(NamePokemonDataResponse(it.species?.name, it.species?.url!!
+                    .removePrefix("https://pokeapi.co/api/v2/pokemon-species/").removeSuffix("/")))
+                if(it.evolves_to!!.isNotEmpty()){
+                    it.evolves_to.map { it2 ->
+                        pokemonList.add(NamePokemonDataResponse(it2.species?.name, it2.species?.url!!
+                            .removePrefix("https://pokeapi.co/api/v2/pokemon-species/").removeSuffix("/")))
+                    }
+                }
+            }
+        }
+
+        return pokemonList
     }
 
     suspend fun getPokemonByType(tipo : String) : Response<TypeListDataResponse>{

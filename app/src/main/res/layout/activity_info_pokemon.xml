@@ -20,6 +20,8 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent">
 
+
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -55,10 +57,12 @@
 
         <ProgressBar
             android:id="@+id/progress_info"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center|bottom"
+            app:layout_constraintTop_toBottomOf="@id/info_toolbar"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -173,13 +177,13 @@
                 app:layout_constraintLeft_toLeftOf="parent"/>
 
 
-            <TextView
+            <Button
                 android:id="@+id/evolucao"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Evoluções:"
+                android:text="Veja as possiveis\n evoluções clicando aqui"
                 android:padding="10dp"
-                android:textSize="30dp"
+                android:textSize="10dp"
                 app:layout_constraintTop_toBottomOf="@id/speed"
                 app:layout_constraintBottom_toTopOf="@id/text_habilidade"/>
 

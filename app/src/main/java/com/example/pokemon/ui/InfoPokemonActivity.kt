@@ -40,12 +40,25 @@ class InfoPokemonActivity : AppCompatActivity() ,
         viewModel.responsePokemonsTypes().observe(this, Observer { responseType -> processResponseTipo(responseType) })
         viewModel.responseInfo().observe(this, Observer { response ->  processResponse(response)})
         viewModel.responseHabilidades().observe(this, Observer { responseHabilidade -> processResponseHabilidade(responseHabilidade) })
-
+        viewModel.responseEvolucao().observe(this, Observer { responseEvolucao -> processResponseEvolucao(responseEvolucao) })
         botao_voltar.setOnClickListener { onBackPressed() }
         viewModel.getInfoPokemon(intent.getStringExtra("nome") ?: throw Exception("Nome invalido"))
         constrain_info.visibility = View.INVISIBLE
         progress_info.visibility = View.VISIBLE
 
+    }
+
+    private fun processResponseEvolucao(response: Response){
+        when (response.status) {
+            Status.SUCCESS -> responseEvolucaoSucess(response.data)
+            Status.ERROR -> responseFailure(response.error)
+            else -> throw Exception("processResponseEvolucao error")
+        }
+    }
+
+    private fun responseEvolucaoSucess(result : Any?){
+        result as ArrayList<NamePokemonDataResponse>
+        responseTipoSucess(result)
     }
 
     private fun processResponseTipo(response: Response){
@@ -58,6 +71,7 @@ class InfoPokemonActivity : AppCompatActivity() ,
     private fun responseTipoSucess(result: Any?){
         result as ArrayList<NamePokemonDataResponse>
 
+        progress_info.visibility = View.GONE
         val dialog = AlertDialog.Builder(this)
         val view = layoutInflater.inflate(R.layout.dialog_tipo, null)
         view.recycler_tipo_pokemons.layoutManager = GridLayoutManager(this, 2)
@@ -78,7 +92,10 @@ class InfoPokemonActivity : AppCompatActivity() ,
     private fun responseHabilidadeSucess(result : Any?){
         result as Habilidade
 
-        AlertDialog.Builder(this).setTitle("Description").setMessage(result.efeitos[0].effect).setPositiveButton("ok",  { _, _ ->}).create().show()
+        progress_info.visibility = View.GONE
+        AlertDialog.Builder(this).setTitle("Description")
+            .setMessage(result.efeitos[0].effect)
+            .setPositiveButton("ok",  { _, _ ->}).create().show()
     }
 
     private fun processResponse(response: Response) {
@@ -122,13 +139,16 @@ class InfoPokemonActivity : AppCompatActivity() ,
         recycler_moves.isNestedScrollingEnabled = false
         recycler_moves.adapter = MovesAdapter(this, pokemon.habilidades, this)
 
-        evolucao.setOnClickListener { viewModel.getEvolucao(pokemon.id ?: throw Exception("pokemon Id is null")) }
+        evolucao.setOnClickListener {
+            progress_info.visibility = View.VISIBLE
+            viewModel.getEvolucao(pokemon.id ?: throw Exception("pokemon Id is null")) }
 
 
     }
 
     override fun listarTipo(item: AbilitiesDataResponse) {
 //        Toast.makeText(this, "Aguarde", Toast.LENGTH_SHORT).show()
+        progress_info.visibility = View.VISIBLE
         viewModel.getHabilidades(item.ability?.name!!)
     }
 

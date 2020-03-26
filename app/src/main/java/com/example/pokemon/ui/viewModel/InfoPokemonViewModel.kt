@@ -13,6 +13,7 @@ class InfoPokemonViewModel(private val repository: PokemonInfoRepository) : View
     private val responseInfo = MutableLiveData<Response>()
     private val responseHabilidades = MutableLiveData<Response>()
     private val responsePokemonsTypes = MutableLiveData<Response>()
+    private val responseEvolucao = MutableLiveData<Response>()
 
 
     fun getInfoPokemon(nomePokemon : String){
@@ -46,10 +47,12 @@ class InfoPokemonViewModel(private val repository: PokemonInfoRepository) : View
 
         viewModelScope.launch {
             try {
-                repository.getEvolucao(idPokemon)
+                val requisicao = repository.getEvolucao(idPokemon)
+                responseEvolucao.postValue(Response.success(repository.mapEvolucao(requisicao)))
             }
             catch (t : Throwable){
                 println(t.message + "  getEvolucao viewmodel  ")
+                responseEvolucao.postValue(Response.error(t))
             }
         }
     }
@@ -69,6 +72,10 @@ class InfoPokemonViewModel(private val repository: PokemonInfoRepository) : View
 
     fun responseInfo() : MutableLiveData<Response>{
         return responseInfo
+    }
+
+    fun responseEvolucao() : MutableLiveData<Response>{
+        return responseEvolucao
     }
 
     fun responseHabilidades() : MutableLiveData<Response>{
